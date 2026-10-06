@@ -9,12 +9,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build package
+      - name: Clone third-party feed
+        run: |
+          mkdir -p feed
+          git clone --depth=1 https://github.com/jjm2473/openwrt-third.git feed/openwrt-third
+
+      - name: Build
         uses: openwrt/gh-action-sdk@main
+        env:
+          ARCH: aarch64_cortex-a53
+          TARGET: airoha/an7581
+          VERSION: master
+          FEED_DIR: ${{ github.workspace }}/feed
+          ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
+          PACKAGES: luci-app-filetransfer
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          arch: aarch64_cortex-a53
-          target: airoha/an7581
-          version: master
-          packages: luci-app-filetransfer
-          feeds: |
-            src-git openwrt-third https://github.com/jjm2473/openwrt-third.git
+          name: luci-app-filetransfer-apk
+          path: artifacts/bin/packages/**/*.apk
