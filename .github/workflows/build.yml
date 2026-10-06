@@ -1,28 +1,23 @@
 name: Build luci-app-filetransfer APK
 
 on:
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Build Package
-        uses: openwrt-package-builder-action@v1
-        with:
-          # 你的系统版本：SNAPSHOT 对应 master
-          version: master
-          # 你的设备目标
-          target: airoha/an7581
-          # 你的架构
-          arch: aarch64_cortex-a53
-          # 要编译的包
-          packages: luci-app-filetransfer
-          # 添加第三方 feed 源，这里用 jjm2473/openwrt-third，它已适配 apk
-          feeds: |
-            src-git openwrt-third https://github.com/jjm2473/openwrt-third.git
-          # 输出 apk 格式
-          package_format: apk
+      - name: Add dirs
+        run: mkdir -p artifacts feed
+
+      - name: Build
+        uses: ./
+        env:
+          TARGET: airoha/an7581
+          VERSION: master
+          ARCH: aarch64_cortex-a53
+          ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
+          FEED_DIR: ${{ github.workspace }}/feed
+          PACKAGES: luci-app-filetransfer
