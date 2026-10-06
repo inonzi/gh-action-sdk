@@ -1,0 +1,40 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: zh_Hans\n"
+
+msgid "File Transfer"
+msgstr "文件传输"
+
+msgid "Upload"
+msgstr "上传"
+
+msgid "Download"
+msgstr "下载"
+
+msgid "Choose File"
+msgstr "选择文件"
+
+msgid "File Name"
+msgstr "文件名"
+
+msgid "Size"
+msgstr "大小"
+
+msgid "Modify"
+msgstr "修改时间"
+
+msgid "Action"
+msgstr "操作"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Rename"
+msgstr "重命名"
+
+msgid "New Folder"
+msgstr "新建文件夹"
+
+msgid "Parent Directory"
+msgstr "上级目录"
