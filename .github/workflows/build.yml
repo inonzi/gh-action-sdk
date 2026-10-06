@@ -9,12 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Clone third-party feed
+      - name: Create dirs and clone feed
         run: |
-          mkdir -p feed
+          mkdir -p artifacts feed
           git clone --depth=1 https://github.com/jjm2473/openwrt-third.git feed/openwrt-third
 
-      - name: Build
+      - name: Build package
         uses: openwrt/gh-action-sdk@main
         env:
           ARCH: aarch64_cortex-a53
