@@ -3,6 +3,13 @@ name: Build luci-app-easymesh (APK)
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
+env:
+  ARCH: aarch64_cortex-a53
+  VERSION: snapshots
+
 jobs:
   build:
     name: Build APK
@@ -14,10 +21,10 @@ jobs:
           fetch-depth: 0
 
       - name: Build package
-        uses: immortalwrt/gh-action-sdk@v5   # 使用 ImmortalWrt 的 SDK
+        uses: immortalwrt/gh-action-sdk@master   # 如果提示找不到 master，改成 @main
         env:
-          ARCH: aarch64_cortex-a53
-          VERSION: snapshots
+          ARCH: ${{ env.ARCH }}
+          VERSION: ${{ env.VERSION }}
           NO_DEFAULT_FEEDS: 1
           EXTRA_FEEDS: |-
             src-git packages https://github.com/immortalwrt/packages.git
@@ -34,3 +41,17 @@ jobs:
         with:
           name: luci-app-easymesh-apk
           path: bin/packages/${{ env.ARCH }}/**/*.apk
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: easymesh-${{ github.run_number }}
+          name: EasyMesh APK ${{ github.run_number }}
+          draft: false
+          prerelease: false
+          files: |
+            bin/packages/${{ env.ARCH }}/**/luci-app-easymesh*.apk
+            bin/packages/${{ env.ARCH }}/**/luci-i18n-easymesh*.apk
+            bin/packages/${{ env.ARCH }}/**/kmod-batman-adv*.apk
+            bin/packages/${{ env.ARCH }}/**/batctl*.apk
+            bin/packages/${{ env.ARCH }}/**/wpad-mesh*.apk
