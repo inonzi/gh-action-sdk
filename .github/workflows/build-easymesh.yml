@@ -9,6 +9,7 @@ permissions:
 env:
   ARCH: aarch64_cortex-a53
   VERSION: snapshots
+  CONFIG_VERSION_REPO: "https://mirrors.pku.edu.cn/immortalwrt/"
 
 jobs:
   build:
@@ -23,14 +24,15 @@ jobs:
       - name: Build package
         uses: immortalwrt/gh-action-sdk@master
         env:
-          ARCH: aarch64_cortex-a53
-          VERSION: snapshots
+          ARCH: ${{ env.ARCH }}
+          VERSION: ${{ env.VERSION }}
+          CONFIG_VERSION_REPO: ${{ env.CONFIG_VERSION_REPO }}
           NO_DEFAULT_FEEDS: 1
           EXTRA_FEEDS: |-
-            src-git packages https://mirrors.tuna.tsinghua.edu.cn/git/immortalwrt/packages.git
-            src-git luci https://mirrors.tuna.tsinghua.edu.cn/git/immortalwrt/luci.git
-            src-git routing https://mirrors.tuna.tsinghua.edu.cn/git/immortalwrt/routing.git
-            src-git telephony https://mirrors.tuna.tsinghua.edu.cn/git/immortalwrt/telephony.git
+            src-git packages https://github.com/immortalwrt/packages.git
+            src-git luci https://github.com/immortalwrt/luci.git
+            src-git routing https://github.com/immortalwrt/routing.git
+            src-git telephony https://github.com/immortalwrt/telephony.git
             src-git kenzo https://github.com/kenzok8/openwrt-packages
             src-git small https://github.com/kenzok8/small
           PACKAGES: luci-app-easymesh
@@ -48,10 +50,3 @@ jobs:
           tag_name: easymesh-${{ github.run_number }}
           name: EasyMesh APK ${{ github.run_number }}
           draft: false
-          prerelease: false
-          files: |
-            bin/packages/${{ env.ARCH }}/**/luci-app-easymesh*.apk
-            bin/packages/${{ env.ARCH }}/**/luci-i18n-easymesh*.apk
-            bin/packages/${{ env.ARCH }}/**/kmod-batman-adv*.apk
-            bin/packages/${{ env.ARCH }}/**/batctl*.apk
-            bin/packages/${{ env.ARCH }}/**/wpad-mesh*.apk
