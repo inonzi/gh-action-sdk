@@ -1,1 +1,38 @@
+name: Build luci-app-easymesh (APK)
 
+on:
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build package
+        uses: EkkoG/gh-action-sdk@main # 使用支持APK的Action
+        env:
+          # 关键：指定你的PonWrt SDK版本。PonWrt基于AN7581，通常使用aarch64架构。
+          # 你需要确认你的设备架构，常见的有 aarch64_cortex-a53 或 aarch64_generic
+          ARCH: aarch64_cortex-a53
+          # 指定SDK版本为snapshots，以匹配你的PonWrt SNAPSHOT
+          VERSION: snapshots
+          # 添加kenzok8源
+          EXTRA_FEEDS: |-
+            src-git kenzo https://github.com/kenzok8/openwrt-packages
+            src-git small https://github.com/kenzok8/small
+          # 指定要编译的包
+          PACKAGES: luci-app-easymesh
+          # 设置构建详细日志，便于排错
+          V: s
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: luci-app-easymesh-apk
+          # 注意：APK文件的输出路径可能因Action版本而异，常见路径如下
+          path: bin/packages/${{ env.ARCH }}/kenzo/*.apk
