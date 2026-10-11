@@ -14,16 +14,16 @@ jobs:
           fetch-depth: 0
 
       - name: Build package
-        uses: openwrt/gh-action-sdk@v9
+        uses: immortalwrt/gh-action-sdk@v5   # 使用 ImmortalWrt 的 SDK
         env:
           ARCH: aarch64_cortex-a53
           VERSION: snapshots
-          NO_DEFAULT_FEEDS: 1   # 关键：禁用默认 feed
+          NO_DEFAULT_FEEDS: 1
           EXTRA_FEEDS: |-
-            src-git packages https://github.com/openwrt/packages.git
-            src-git luci https://github.com/openwrt/luci.git
-            src-git routing https://github.com/openwrt/routing.git
-            src-git telephony https://github.com/openwrt/telephony.git
+            src-git packages https://github.com/immortalwrt/packages.git
+            src-git luci https://github.com/immortalwrt/luci.git
+            src-git routing https://github.com/immortalwrt/routing.git
+            src-git telephony https://github.com/immortalwrt/telephony.git
             src-git kenzo https://github.com/kenzok8/openwrt-packages
             src-git small https://github.com/kenzok8/small
           PACKAGES: luci-app-easymesh luci-i18n-easymesh-zh-cn
