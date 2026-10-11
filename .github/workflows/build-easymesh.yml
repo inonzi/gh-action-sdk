@@ -1,52 +1,33 @@
-name: Build luci-app-easymesh (APK)
+name: Build luci-app-easymesh APK
 
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-
-env:
-  ARCH: aarch64_cortex-a53
-  VERSION: snapshots
-  CONFIG_VERSION_REPO: "https://mirrors.pku.edu.cn/immortalwrt/"
-
 jobs:
   build:
-    name: Build APK
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
+
+      - name: Create dirs and clone feeds
+        run: |
+          mkdir -p artifacts feed
+          # 克隆 kenzok8 的两个源到本地 feed 目录
+          git clone --depth=1 https://github.com/kenzok8/openwrt-packages.git feed/openwrt-packages
+          git clone --depth=1 https://github.com/kenzok8/small.git feed/small
 
       - name: Build package
-        uses: immortalwrt/gh-action-sdk@master
+        uses: openwrt/gh-action-sdk@main
         env:
-          ARCH: ${{ env.ARCH }}
-          VERSION: ${{ env.VERSION }}
-          CONFIG_VERSION_REPO: ${{ env.CONFIG_VERSION_REPO }}
-          NO_DEFAULT_FEEDS: 1
-          EXTRA_FEEDS: |-
-            src-git packages https://github.com/immortalwrt/packages.git
-            src-git luci https://github.com/immortalwrt/luci.git
-            src-git routing https://github.com/immortalwrt/routing.git
-            src-git telephony https://github.com/immortalwrt/telephony.git
-            src-git kenzo https://github.com/kenzok8/openwrt-packages
-            src-git small https://github.com/kenzok8/small
+          ARCH: aarch64_cortex-a53
+          TARGET: airoha/an7581
+          VERSION: master
+          FEED_DIR: ${{ github.workspace }}/feed
+          ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
           PACKAGES: luci-app-easymesh
-          V: s
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: luci-app-easymesh-apk
-          path: bin/packages/${{ env.ARCH }}/**/*.apk
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: easymesh-${{ github.run_number }}
-          name: EasyMesh APK ${{ github.run_number }}
-          draft: false
+          path: artifacts/bin/packages/**/*.apk
