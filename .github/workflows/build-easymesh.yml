@@ -21,19 +21,19 @@ jobs:
           fetch-depth: 0
 
       - name: Build package
-        uses: immortalwrt/gh-action-sdk@master   # 如果提示找不到 master，改成 @main
+        uses: immortalwrt/gh-action-sdk@master
         env:
-          ARCH: ${{ env.ARCH }}
-          VERSION: ${{ env.VERSION }}
+          ARCH: aarch64_cortex-a53
+          VERSION: snapshots
           NO_DEFAULT_FEEDS: 1
           EXTRA_FEEDS: |-
-            src-git packages https://github.com/immortalwrt/packages.git
-            src-git luci https://github.com/immortalwrt/luci.git
-            src-git routing https://github.com/immortalwrt/routing.git
-            src-git telephony https://github.com/immortalwrt/telephony.git
+            src-git packages https://mirrors.tuna.tsinghua.edu.cn/git/immortalwrt/packages.git
+            src-git luci https://mirrors.tuna.tsinghua.edu.cn/git/immortalwrt/luci.git
+            src-git routing https://mirrors.tuna.tsinghua.edu.cn/git/immortalwrt/routing.git
+            src-git telephony https://mirrors.tuna.tsinghua.edu.cn/git/immortalwrt/telephony.git
             src-git kenzo https://github.com/kenzok8/openwrt-packages
             src-git small https://github.com/kenzok8/small
-          PACKAGES: luci-app-easymesh luci-i18n-easymesh-zh-cn
+          PACKAGES: luci-app-easymesh
           V: s
 
       - name: Upload artifacts
